@@ -1,0 +1,11 @@
+$primary-color: #ffffff;
+
+.section {
+    &__rowitem {
+        padding-left: 12px;
+    }
+    &__rowtitle {
+        color: $primary-color;
+        font-size: 16px;
+    }
+}
