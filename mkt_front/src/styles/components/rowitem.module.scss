@@ -1,8 +1,35 @@
-$primary-color: #ffffff;
+$primary-color: #242424;
 
 .section {
+    background: #fff;
+    width: 80%;
+    margin: 10%;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    &__edit {
+        color: $primary-color;
+        width: 60%;
+    }
+    &__result {
+        color: $primary-color;
+        width: 40%;
+        height: 100%;
+        //border-left: 1px solid #242424;
+        padding-left: 5px;
+        box-sizing: border-box;
+        padding-top: 20px;
+    }
+    &__resulttitle {
+        margin-top: 20px;
+    }
     &__rowitem {
-        padding-left: 12px;
+        width: 100%;
+        box-sizing: border-box;
+        .section__rowitem {
+            width: 100%;
+            box-sizing: border-box;
+            padding-left: 12px;
+        }
     }
     &__rowtitle {
         color: $primary-color;

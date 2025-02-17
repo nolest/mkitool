@@ -14,8 +14,8 @@ const sectionList: rowItem[] = [
           { id: 3, text: '航空资产租赁系统' }, 
       ]},
       { id: 2, title: '业务规模', field: '', editable: false, children: [
-        { id: 1, title: '用户量', field: '', editable: false, children: [] , recommendList:[ { id: 1, text: 'C端500万+注册用户' }, { id: 2, text: 'B端2000+企业客户' } ]},
-        { id: 2, title: '数据量', field: '', editable: false, children: [] , recommendList:[ { id: 1, text: '日均处理10TB交易数据' }, { id: 2, text: '峰值QPS5000+' } ]} ] },
+        { id: 1, title: '用户量', field: '', editable: true, children: [] , recommendList:[ { id: 1, text: 'C端500万+注册用户' }, { id: 2, text: 'B端2000+企业客户' } ]},
+        { id: 2, title: '数据量', field: '', editable: true, children: [] , recommendList:[ { id: 1, text: '日均处理10TB交易数据' }, { id: 2, text: '峰值QPS5000+' } ]} ] },
       { id: 3, title: '业务连续性要求', field: '', editable: true, children: [], recommendList:[ { id: 1, text: '允许最大停机时间<15分钟/季度' }] }
     ], 
     recommendList:[ 
@@ -126,10 +126,18 @@ const sectionList: rowItem[] = [
 const Home: React.FC = () => {
   return (
     <>
-      <Flex gap="middle" justify="start" align="start" vertical>
-        {sectionList.map((section) => (
-          <RowItem key={section.id} {...section} />
-        ))}
+      <Flex className="section" gap="middle" justify="space-between" align="start">
+        <Flex className="section__edit" gap="middle" justify="start" align="start" vertical>
+          {sectionList.map((section) => (
+            <RowItem key={section.id} {...section} />
+          ))}
+        </Flex>
+
+        <Flex className="section__result" gap="middle" justify="start" align="start" vertical>
+          <Flex className="section__resulttitle" gap="middle" justify="start" align="start" vertical>
+            提示词预览
+          </Flex>
+        </Flex>
       </Flex>
     </>
   );
