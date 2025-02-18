@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Flex } from 'antd';
 import { rowItem } from '@/shared/types/common.types';
 import RowItem from '../../src/components/rowitem';
@@ -6,31 +6,34 @@ import TextArea from 'antd/es/input/TextArea';
 
 // 定义区块列表数据
 let sectionList: rowItem[] = [
-  { id: 1, parentId: 0, title: '一、行业背景与业务特性', field: '', editable: true, 
+  { id: 1, parentId: 0, title: '一、行业背景与业务特性', field: '', editable: false, 
     children: [
-      { id: 2, parentId: 1, title: '细分场景', field: '', editable: true, children: [], 
-        recommendList: [ 
-          { id: 1, parentId: 2, text: '车险理赔自动化' }, 
-          { id: 2, parentId: 2, text: '政务数据开放平台' }, 
-          { id: 3, parentId: 2, text: '航空资产租赁系统' }, 
-      ]},
-      { id: 3, parentId: 1, title: '业务规模', field: '', editable: false, children: [
-        { id: 4, parentId: 3, title: '用户量', field: '', editable: true, children: [] , recommendList:[ 
-          { id: 1, parentId: 4, text: 'C端500万+注册用户' }, 
-          { id: 2, parentId: 4, text: 'B端2000+企业客户' } 
+      { id: 66, parentId: 1, title: '客户行业', field: '', editable: true, children: [
+        { id: 2, parentId: 66, title: '细分场景', field: '', editable: true, children: [], 
+          recommendList: [ 
+            { id: 1, parentId: 2, text: '车险理赔自动化' }, 
+            { id: 2, parentId: 2, text: '政务数据开放平台' }, 
+            { id: 3, parentId: 2, text: '航空资产租赁系统' }, 
         ]},
-        { id: 5, parentId: 3, title: '数据量', field: '', editable: true, children: [] , recommendList:[ 
-          { id: 1, parentId: 5, text: '日均处理10TB交易数据' }, 
-          { id: 2, parentId: 5, text: '峰值QPS5000+' } ]} ] },
-      { id: 6, parentId: 1, title: '业务连续性要求', field: '', editable: true, children: [], recommendList:[ 
-        { id: 1, parentId: 6, text: '允许最大停机时间<15分钟/季度' }] }
+        { id: 3, parentId: 66, title: '业务规模', field: '', editable: false, children: [
+          { id: 4, parentId: 3, title: '用户量', field: '', editable: true, children: [] , recommendList:[ 
+            { id: 1, parentId: 4, text: 'C端500万+注册用户' }, 
+            { id: 2, parentId: 4, text: 'B端2000+企业客户' } 
+          ]},
+          { id: 5, parentId: 3, title: '数据量', field: '', editable: true, children: [] , recommendList:[ 
+            { id: 1, parentId: 5, text: '日均处理10TB交易数据' }, 
+            { id: 2, parentId: 5, text: '峰值QPS5000+' } ]} ] },
+        { id: 6, parentId: 66, title: '业务连续性要求', field: '', editable: true, children: [], recommendList:[ 
+          { id: 1, parentId: 6, text: '允许最大停机时间<15分钟/季度' }] }
+      ],
+      recommendList:[ 
+        { id: 1, parentId: 66, text: '保险' }, 
+        { id: 2, parentId: 66, text: '政府' }, 
+        { id: 3, parentId: 66, text: '航空' }, 
+        { id: 4, parentId: 66, text: '零售' } 
+      ]
+    },
     ], 
-    recommendList:[ 
-      { id: 1, parentId: 1, text: '保险' }, 
-      { id: 2, parentId: 1, text: '政府' }, 
-      { id: 3, parentId: 1, text: '航空' }, 
-      { id: 4, parentId: 1, text: '零售' } 
-    ]
   },
   { id: 7, parentId: 0, title: '二、痛点诊断与技术债分析', field: '', editable: false, children:  [ 
     { id: 8, parentId: 7, title: '当前痛点', field: '', editable: false, children: [ 
@@ -200,6 +203,12 @@ let sectionList: rowItem[] = [
 
 const Home: React.FC = () => {
   const [sectionData, setSectionData] = useState<rowItem[]>(sectionList);
+  const [outputText, setOutputText] = useState<string>('');
+
+  useEffect(() => {
+    const generated = generateOutputText(sectionData);
+    setOutputText(generated);
+  }, [sectionData]);
 
   const handleValueChange = (id: number, newValue: string) => {
     setSectionData(prev => 
@@ -223,6 +232,42 @@ const Home: React.FC = () => {
     );
   };
   
+  const generateOutputText = (items: rowItem[], indentLevel = 0): string => {
+    return items.map(item => {
+      const indent = '  '.repeat(indentLevel);
+      let line = '';
+      
+      // 根据层级应用不同格式
+      switch(indentLevel) {
+        case 0:
+          line += `### ${item.title}`;
+          break;
+        case 1:
+          line += `${indent}[${item.title}]`;
+          break;
+        case 2:
+          line += `${indent}- **${item.title}**`;
+          break;
+        default:
+          line += `${indent}- ${item.title}`;
+      }
+
+      // 添加字段值（如果有）
+      if (item.field) {
+        line += indentLevel >= 2 ? `: ${item.field}\n` : `${indent}  ${item.field}\n`;
+      } else {
+        line += indentLevel >= 2 ? "\n" : "\n";
+      }
+
+      // 递归处理子项
+      if (item.children) {
+        line += generateOutputText(item.children, indentLevel + 1);
+      }
+
+      return line;
+    }).join('');
+  };
+
   return (
     <>
       <Flex className="section" gap="middle" justify="space-between" align="start">
@@ -235,7 +280,12 @@ const Home: React.FC = () => {
         <Flex className="section__result" gap="middle" justify="start" align="start" vertical>
           <Flex className="section__resulttitle" gap="middle" justify="start" align="start" vertical>
             <div>提示词预览</div>
-            <TextArea rows={4} style={{ height: `800px`, width: `30vw` }}/>
+            <TextArea 
+              rows={4} 
+              style={{ height: `800px`, width: `30vw` }}
+              value={outputText}
+              onChange={(e) => setOutputText(e.target.value)}
+            />
           </Flex>
         </Flex>
       </Flex>
