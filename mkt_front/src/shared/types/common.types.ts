@@ -10,4 +10,6 @@ export  interface rowItem {
     editable: boolean;
     children?: rowItem[];
     recommendList?: listItem[];
+    onValueChange?: (id: number, value: string) => void;
+    depth?: number;
   }

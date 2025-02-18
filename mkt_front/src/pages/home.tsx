@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Flex } from 'antd';
 import { rowItem } from '@/shared/types/common.types';
 import RowItem from '../../src/components/rowitem';
 import TextArea from 'antd/es/input/TextArea';
 
 // 定义区块列表数据
-const sectionList: rowItem[] = [
+let sectionList: rowItem[] = [
   { id: 1, title: '一、行业背景与业务特性', field: '', editable: true, 
     children: [
       { id: 1, title: '细分场景', field: '', editable: true, children: [], 
@@ -125,12 +125,36 @@ const sectionList: rowItem[] = [
 ];
 
 const Home: React.FC = () => {
+  const [sectionData, setSectionData] = useState<rowItem[]>(sectionList);
+
+  const handleValueChange = (id: number, newValue: string) => {
+    setSectionData(prev => 
+      prev.map(item => 
+        item.id === id 
+          ? { ...item, field: newValue } 
+          : item.children 
+            ? { ...item, children: updateNestedItems(item.children, id, newValue) } 
+            : item
+      )
+    );
+  };
+
+  const updateNestedItems = (items: rowItem[], targetId: number, newValue: string): rowItem[] => {
+    return items.map(item => 
+      item.id === targetId 
+        ? { ...item, field: newValue } 
+        : item.children 
+          ? { ...item, children: updateNestedItems(item.children, targetId, newValue) } 
+          : item
+    );
+  };
+  
   return (
     <>
       <Flex className="section" gap="middle" justify="space-between" align="start">
         <Flex className="section__edit" gap="middle" justify="start" align="start" vertical>
-          {sectionList.map((section) => (
-            <RowItem key={section.id} {...section} />
+          {sectionData.map((section) => (
+            <RowItem key={section.id} {...section} onValueChange={handleValueChange}/>
           ))}
         </Flex>
 

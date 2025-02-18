@@ -7,13 +7,28 @@ const { TextArea } = Input;
 
 const RowItem: React.FC<rowItem> = ({
     id,
+    onValueChange,
     title,
     field,
     editable,
     children,
     recommendList
 }) => {
-    const [inputValue, setInputValue] = useState('');
+    const [inputValue, setInputValue] = useState(field);
+
+    // 处理输入变化
+    const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const newValue = e.target.value;
+        setInputValue(newValue);
+        onValueChange?.(id, newValue);
+    };
+
+    // 处理推荐项点击
+    const handleRecommendClick = (text: string) => {
+        const newValue = inputValue ? `${inputValue}\n${text}` : text;
+        setInputValue(newValue);
+        onValueChange?.(id, newValue);
+    };
 
     return (
         <Flex className="section__rowitem" vertical id={id.toString()}>
@@ -25,7 +40,7 @@ const RowItem: React.FC<rowItem> = ({
                             rows={1} 
                             style={{ height: 80, width: 300 }}
                             value={inputValue}
-                            onChange={(e) => setInputValue(e.target.value)}
+                            onChange={handleInputChange}
                         />
                     </Flex>
                     
@@ -35,12 +50,11 @@ const RowItem: React.FC<rowItem> = ({
                         bordered
                         dataSource={recommendList}
                         renderItem={(item) => 
-                            <List.Item className="section__rowlistitem" onClick={() => {
-                                setInputValue(prev => 
-                                    prev ? `${prev}\n${item.text}` : item.text
-                                );
-                            }}>
-                                <Flex justify="center" align="center" wrap={true} >
+                            <List.Item 
+                                className="section__rowlistitem" 
+                                onClick={() => handleRecommendClick(item.text)}
+                            >
+                                <Flex justify="center" align="center" wrap={true}>
                                     <Flex flex={1}>
                                         {item.text}
                                     </Flex>
@@ -54,11 +68,12 @@ const RowItem: React.FC<rowItem> = ({
                 </Flex>
             )}
             
-            {/* 递归渲染子项 */}
+            {/* 递归渲染子项时传递回调 */}
             {children?.map((child) => (
                 <RowItem
                     key={child.id}
                     {...child}
+                    onValueChange={onValueChange}
                 />
             ))}
         </Flex>
