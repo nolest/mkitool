@@ -2,6 +2,7 @@ import React from 'react';
 import { Flex } from 'antd';
 import { rowItem } from '@/shared/types/common.types';
 import RowItem from '../../src/components/rowitem';
+import TextArea from 'antd/es/input/TextArea';
 
 // 定义区块列表数据
 const sectionList: rowItem[] = [
@@ -135,7 +136,8 @@ const Home: React.FC = () => {
 
         <Flex className="section__result" gap="middle" justify="start" align="start" vertical>
           <Flex className="section__resulttitle" gap="middle" justify="start" align="start" vertical>
-            提示词预览
+            <div>提示词预览</div>
+            <TextArea rows={4} style={{ height: `800px`, width: `30vw` }}/>
           </Flex>
         </Flex>
       </Flex>
