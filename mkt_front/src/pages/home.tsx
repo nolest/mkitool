@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Flex } from 'antd';
+import { Button, Flex } from 'antd';
 import { rowItem } from '@/shared/types/common.types';
 import RowItem from '../../src/components/rowitem';
 import TextArea from 'antd/es/input/TextArea';
@@ -279,13 +279,29 @@ const Home: React.FC = () => {
 
         <Flex className="section__result" gap="middle" justify="start" align="start" vertical>
           <Flex className="section__resulttitle" gap="middle" justify="start" align="start" vertical>
-            <div>提示词预览</div>
+            <Flex gap="middle" justify="start" align="center">
+              <div>提示词预览</div>
+              <Button type="primary" loading>
+                Loading
+              </Button>
+            </Flex>
+
             <TextArea 
               rows={4} 
               style={{ height: `800px`, width: `30vw` }}
               value={outputText}
               onChange={(e) => setOutputText(e.target.value)}
             />
+
+            <Flex gap="middle" justify="start" align="start" vertical>
+              <div>生成结果</div>
+              <TextArea 
+              rows={3} 
+              style={{ height: `200px`, width: `30vw` }}
+              value={outputText}
+            />
+            </Flex>
+
           </Flex>
         </Flex>
       </Flex>
