@@ -6,10 +6,10 @@ const axios = require('axios');
 router.post('/chat', async (req, res) => {
   try {
     const { messages } = req.body;
-    
+    console.log(messages);
     const response = await axios.post('https://openrouter.ai/api/v1/chat/completions', {
       model: "deepseek/deepseek-r1:free",
-      messages: messages
+      messages: messages.content
     }, {
       headers: {
         "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,

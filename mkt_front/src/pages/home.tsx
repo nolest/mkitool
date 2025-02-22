@@ -268,6 +268,27 @@ const Home: React.FC = () => {
     }).join('');
   };
 
+  function handleGenerate(): void {
+    fetch('http://localhost:5000/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        messages: [
+          { role: "user", content: outputText }
+        ]
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    })
+  }
+
   return (
     <>
       <Flex className="section" gap="middle" justify="space-between" align="start">
@@ -281,9 +302,7 @@ const Home: React.FC = () => {
           <Flex className="section__resulttitle" gap="middle" justify="start" align="start" vertical>
             <Flex gap="middle" justify="start" align="center">
               <div>提示词预览</div>
-              <Button type="primary" loading>
-                Loading
-              </Button>
+              <Button type="primary" onClick={handleGenerate}>Submit</Button>
             </Flex>
 
             <TextArea 
